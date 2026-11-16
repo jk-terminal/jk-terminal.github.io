@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex">
+<title>Page not found | jk-terminal</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%2318202b'/%3E%3Cpath d='M8 10l7 6-7 6' fill='none' stroke='%23f0b354' stroke-width='3'/%3E%3Cpath d='M17 22h7' stroke='%23dde4ec' stroke-width='3'/%3E%3C/svg%3E">
+<style>
+  :root {
+    --bg: #18202b;
+    --line: #324052;
+    --text: #dde4ec;
+    --muted: #9aa8b9;
+    --amber: #f0b354;
+    --mono: ui-monospace, "Adwaita Mono", "Source Code Pro", "Cascadia Mono",
+            "DejaVu Sans Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", "Adwaita Sans", Cantarell,
+            "Noto Sans", Roboto, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+  main {
+    max-width: 40rem;
+    margin: 0 auto;
+    padding: 18vh 1.25rem 4rem;
+  }
+  .status {
+    margin: 0 0 1rem;
+    font-family: var(--mono);
+    color: var(--muted);
+  }
+  .led {
+    display: inline-block;
+    width: 0.6rem;
+    height: 0.6rem;
+    margin-right: 0.5rem;
+    border-radius: 50%;
+    border: 2px solid var(--amber);
+  }
+  h1 {
+    margin: 0 0 1rem;
+    font-family: var(--mono);
+    font-size: clamp(1.75rem, 1.2rem + 2.6vw, 2.75rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+  p { margin: 0 0 1.5rem; color: var(--muted); max-width: 46ch; }
+  a { color: var(--amber); text-underline-offset: 0.2em; }
+  a:hover { color: var(--text); }
+  a:focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+</style>
+</head>
+<body>
+<main>
+  <p class="status"><span class="led" aria-hidden="true"></span>404, no route to this page</p>
+  <h1>Nothing at this address.</h1>
+  <p>The link may be wrong, or the page may have moved.</p>
+  <a href="/">Go to the front page</a>
+</main>
+</body>
+</html>

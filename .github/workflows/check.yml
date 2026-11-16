@@ -1,0 +1,25 @@
+# Runs scripts/check.sh on GitHub's servers.
+#
+# When: every push to main, and every pull request.
+# Result: a green tick or red cross next to the commit and on the pull request.
+
+name: Check site
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# The job only needs to read the repository.
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the repository files
+        uses: actions/checkout@v6
+
+      - name: Run the site checks
+        run: bash scripts/check.sh

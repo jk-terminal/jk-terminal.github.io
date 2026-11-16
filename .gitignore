@@ -1,0 +1,17 @@
+# Secrets: never commit these
+.env
+.env.*
+*.pem
+*.key
+id_ed25519
+id_rsa
+*.kdbx
+wg*.conf
+
+# Editor leftovers
+*.swp
+*.swo
+*~
+
+# Python cache created by running the check script
+__pycache__/

@@ -13,6 +13,7 @@
   :root {
     --bg: #18202b;
     --panel: #1f2a38;
+    --inset: #141b24;
     --line: #324052;
     --text: #dde4ec;
     --muted: #9aa8b9;
@@ -38,18 +39,20 @@
   }
 
   .wrap {
-    max-width: 60rem;
+    max-width: 66rem;
     margin: 0 auto;
     padding: 0 1.25rem;
   }
 
   a { color: var(--amber); text-underline-offset: 0.2em; }
   a:hover { color: var(--text); }
-  a:focus-visible {
+  a:focus-visible, summary:focus-visible {
     outline: 2px solid var(--amber);
     outline-offset: 3px;
     border-radius: 2px;
   }
+
+  code { font-family: var(--mono); font-size: 0.92em; }
 
   .skip {
     position: absolute;
@@ -87,45 +90,115 @@
   .site-nav a:hover { color: var(--text); text-decoration: underline; }
 
   /* Sections */
-  section { padding: 2.5rem 0; border-bottom: 1px solid var(--line); }
-  section:target, [id] { scroll-margin-top: 1rem; }
+  section { padding: 3rem 0; border-bottom: 1px solid var(--line); }
+  [id] { scroll-margin-top: 1rem; }
 
-  h1, h2, h3 { line-height: 1.25; margin: 0; }
+  h1, h2, h3 { line-height: 1.2; margin: 0; }
   h1 {
     font-family: var(--mono);
-    font-size: clamp(1.5rem, 1.05rem + 2.4vw, 2.5rem);
+    font-size: clamp(1.75rem, 1.05rem + 3.1vw, 3.1rem);
     font-weight: 700;
-    letter-spacing: -0.01em;
-    max-width: 24ch;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
     text-wrap: balance;
   }
-  h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; }
-  h3 { font-size: 1.0625rem; font-weight: 700; }
+  h2 { font-size: 1.375rem; font-weight: 700; margin-bottom: 1.25rem; }
+  h3 { font-size: 1.125rem; font-weight: 700; }
 
   p { margin: 0 0 1rem; max-width: 62ch; }
-  .lede { margin-top: 1.25rem; color: var(--muted); }
-  .lede:last-of-type { margin-bottom: 0; }
   .note { color: var(--muted); }
 
-  .intro { padding-top: 3.5rem; padding-bottom: 3rem; }
+  /* Intro: statement on the left, the route this page took on the right */
+  .intro { padding: 4rem 0 3.5rem; }
+  .intro .wrap {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.5rem;
+    align-items: center;
+  }
+  .lede { margin: 1.5rem 0 0; color: var(--muted); font-size: 1.125rem; max-width: 46ch; }
   .intro-links {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem 1.5rem;
-    margin: 1.5rem 0 0;
+    margin: 1.75rem 0 0;
     padding: 0;
     list-style: none;
+  }
+
+  .route {
+    background: var(--inset);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 0.9375rem;
+  }
+  .route h2 {
+    margin: 0;
+    padding: 0.8rem 1.1rem;
+    border-bottom: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 0.9375rem;
+    font-weight: 400;
+    color: var(--muted);
+  }
+  .hops { list-style: none; margin: 0; padding: 0.5rem 1.1rem 0.7rem; }
+  .hops li {
+    display: grid;
+    grid-template-columns: 1.4rem 1.1rem minmax(0, 1fr);
+    column-gap: 0.5rem;
+    align-items: baseline;
+    padding: 0.5rem 0;
+  }
+  .hops li + li { border-top: 1px dashed var(--line); }
+  .hop-n { color: var(--muted); text-align: right; }
+  .hop-what { display: block; color: var(--text); }
+  .hop-how { display: block; color: var(--muted); font-size: 0.875rem; }
+
+  /* Port LEDs */
+  .led {
+    display: inline-block;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    border: 2px solid var(--muted);
+  }
+  .led-on {
+    background: var(--green);
+    border-color: var(--green);
+    box-shadow: 0 0 0.45rem rgba(126, 214, 160, 0.6);
+  }
+  .led-here {
+    background: var(--amber);
+    border-color: var(--amber);
+    box-shadow: 0 0 0.45rem rgba(240, 179, 84, 0.6);
+  }
+  .led-next { border-color: var(--amber); }
+
+  /* The one piece of motion: links come up hop by hop, once, on load. */
+  @keyframes link-up {
+    from { background: transparent; border-color: var(--muted); box-shadow: none; }
+  }
+  .hops .led { animation: link-up 0.35s ease-out backwards; }
+  .hops li:nth-child(1) .led { animation-delay: 0.30s; }
+  .hops li:nth-child(2) .led { animation-delay: 0.50s; }
+  .hops li:nth-child(3) .led { animation-delay: 0.70s; }
+  .hops li:nth-child(4) .led { animation-delay: 0.90s; }
+  .hops li:nth-child(5) .led { animation-delay: 1.10s; }
+  .hops li:nth-child(6) .led { animation-delay: 1.30s; }
+  @media (prefers-reduced-motion: reduce) {
+    .hops .led { animation: none; }
   }
 
   /* Focus areas */
   .areas {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
-    gap: 1.25rem 2rem;
+    gap: 1.5rem 2.5rem;
     margin: 0;
   }
   .areas dt { font-weight: 700; }
-  .areas dd { margin: 0.15rem 0 0; color: var(--muted); max-width: 42ch; }
+  .areas dd { margin: 0.2rem 0 0; color: var(--muted); max-width: 44ch; }
 
   /* Currently learning: one row per topic, laid out like link-state output */
   .state-list {
@@ -138,64 +211,99 @@
   }
   .state-list li {
     display: grid;
-    grid-template-columns: minmax(9rem, 13rem) 8.5rem 1fr;
+    grid-template-columns: minmax(9rem, 14rem) 8.5rem 1fr;
     gap: 0.25rem 1rem;
     align-items: baseline;
-    padding: 0.7rem 0;
+    padding: 0.75rem 0;
     border-bottom: 1px solid var(--line);
   }
   .state-list .detail { color: var(--muted); }
   .state { white-space: nowrap; }
-
-  .led {
-    display: inline-block;
-    width: 0.6rem;
-    height: 0.6rem;
-    margin-right: 0.45rem;
-    border-radius: 50%;
-    border: 2px solid var(--muted);
-  }
-  .led-on {
-    background: var(--green);
-    border-color: var(--green);
-    box-shadow: 0 0 0.4rem rgba(126, 214, 160, 0.55);
-  }
-  .led-next { border-color: var(--amber); }
+  .state .led { margin-right: 0.45rem; }
 
   /* Projects */
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-    gap: 1rem;
-    margin-top: 1.5rem;
-  }
   .card {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    padding: 1.1rem 1.1rem 1.2rem;
     background: var(--panel);
     border: 1px solid var(--line);
-    border-left: 3px solid var(--amber);
+    border-left: 3px solid var(--line);
     border-radius: 3px;
+    padding: 1.25rem 1.25rem 1.35rem;
   }
   .card p { margin: 0; }
   .card .state {
     font-family: var(--mono);
     font-size: 0.875rem;
     color: var(--muted);
+    margin-bottom: 0.6rem;
   }
-  .card .links { margin-top: auto; padding-top: 0.4rem; color: var(--muted); }
+  .card h3 { margin-bottom: 0.6rem; }
+  .card .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.25rem;
+    margin-top: 1rem;
+    color: var(--muted);
+  }
+
+  .card-live {
+    border-left-color: var(--green);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem 2.5rem;
+    margin-top: 1.5rem;
+  }
+
+  details {
+    background: var(--inset);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    align-self: start;
+  }
+  summary {
+    cursor: pointer;
+    padding: 0.7rem 1rem;
+    font-weight: 700;
+  }
+  details ul {
+    margin: 0;
+    padding: 0.25rem 1rem 1rem 2.1rem;
+    color: var(--muted);
+  }
+  details li { margin-top: 0.6rem; }
+  details li strong { color: var(--text); font-weight: 700; }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .cards .card { border-left-color: var(--amber); }
 
   /* Footer */
   .site-footer { padding: 2rem 0 3rem; color: var(--muted); font-size: 0.9375rem; }
   .site-footer p { margin-bottom: 0.4rem; }
 
+  @media (min-width: 58rem) {
+    .intro .wrap { grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: 3.5rem; }
+    .card-live { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  }
+
   @media (max-width: 34rem) {
-    section { padding: 2rem 0; }
-    .intro { padding-top: 2.5rem; padding-bottom: 2.25rem; }
+    section { padding: 2.25rem 0; }
+    .intro { padding: 2.5rem 0; }
     .state-list li { grid-template-columns: 1fr auto; }
     .state-list .detail { grid-column: 1 / -1; }
+  }
+
+  @media print {
+    :root {
+      --bg: #fff; --panel: #fff; --inset: #fff; --line: #999;
+      --text: #000; --muted: #333; --amber: #000; --green: #000;
+    }
+    .site-nav, .skip { display: none; }
+    .led { box-shadow: none; }
+    details ul { display: block; }
   }
 </style>
 </head>
@@ -218,13 +326,52 @@
 
   <section class="intro">
     <div class="wrap">
-      <!-- TAGLINE: edit the heading and the paragraph below. -->
-      <h1>Linux, bash, networks and security, learned in a home lab and written down.</h1>
-      <p class="lede">This is a working notebook, not a showcase of finished things. Each project gets a short write-up: what I set up, what broke, and what I changed.</p>
-      <ul class="intro-links">
-        <li><a href="#projects">See the projects</a></li>
-        <li><a href="https://github.com/jk-terminal" rel="noopener noreferrer">Browse the repositories on GitHub</a></li>
-      </ul>
+      <div>
+        <!-- TAGLINE: edit the heading and the paragraph below. -->
+        <h1>Linux, bash, networks and security, learned in a home lab and written down.</h1>
+        <p class="lede">A working notebook, not a showcase of finished things. Each project gets a short write-up: what I set up, what broke, and what I changed.</p>
+        <ul class="intro-links">
+          <li><a href="#projects">See the projects</a></li>
+          <li><a href="https://github.com/jk-terminal" rel="noopener noreferrer">Browse the repositories on GitHub</a></li>
+        </ul>
+      </div>
+
+      <!-- ROUTE: the real steps a change takes to reach a visitor. -->
+      <aside class="route" aria-labelledby="route-title">
+        <h2 id="route-title">How this page reached you</h2>
+        <ol class="hops">
+          <li>
+            <span class="hop-n">1</span>
+            <span class="led led-on" aria-hidden="true"></span>
+            <span><span class="hop-what">edit index.html</span><span class="hop-how">one plain file, no build step</span></span>
+          </li>
+          <li>
+            <span class="hop-n">2</span>
+            <span class="led led-on" aria-hidden="true"></span>
+            <span><span class="hop-what">git commit</span><span class="hop-how">saved as a snapshot</span></span>
+          </li>
+          <li>
+            <span class="hop-n">3</span>
+            <span class="led led-on" aria-hidden="true"></span>
+            <span><span class="hop-what">git push</span><span class="hop-how">uploaded to GitHub</span></span>
+          </li>
+          <li>
+            <span class="hop-n">4</span>
+            <span class="led led-on" aria-hidden="true"></span>
+            <span><span class="hop-what">check.sh</span><span class="hop-how">checked for scripts and external requests</span></span>
+          </li>
+          <li>
+            <span class="hop-n">5</span>
+            <span class="led led-on" aria-hidden="true"></span>
+            <span><span class="hop-what">GitHub Pages</span><span class="hop-how">published from the main branch</span></span>
+          </li>
+          <li>
+            <span class="hop-n">6</span>
+            <span class="led led-here" aria-hidden="true"></span>
+            <span><span class="hop-what">your browser</span><span class="hop-how">one request, one file</span></span>
+          </li>
+        </ol>
+      </aside>
     </div>
   </section>
 
@@ -267,7 +414,7 @@
         <li>
           <span class="topic">git and GitHub</span>
           <span class="state"><span class="led led-on" aria-hidden="true"></span>in progress</span>
-          <span class="detail">daily workflow, branches, publishing this site</span>
+          <span class="detail">branches, pull requests, checks that run on every push</span>
         </li>
         <li>
           <span class="topic">firewall rules</span>
@@ -291,20 +438,33 @@
   <section id="projects">
     <div class="wrap">
       <h2>Projects</h2>
-      <p class="note">Nothing published yet. The first write-ups will appear here.</p>
+
+      <!-- PROJECT: this site. Edit the text freely. To start the write-up collapsed, delete the word "open" from the details tag. -->
+      <article class="card card-live">
+        <div>
+          <p class="state"><span class="led led-on" aria-hidden="true"></span>live</p>
+          <h3>This site</h3>
+          <p>One HTML file with no build step, published with GitHub Pages. It is where I learned git from zero: an SSH key, a first commit, a first push, then branches and pull requests. A bash script checks every change for scripts, external requests and leaked addresses.</p>
+          <p class="links">
+            <a href="https://github.com/jk-terminal/jk-terminal.github.io" rel="noopener noreferrer">Repository</a>
+            <a href="https://github.com/jk-terminal/jk-terminal.github.io/blob/main/scripts/check.sh" rel="noopener noreferrer">The check script</a>
+          </p>
+        </div>
+        <details open>
+          <summary>What broke along the way</summary>
+          <ul>
+            <li><strong>Permission denied (publickey).</strong> I tested the SSH login before adding the public key to GitHub. The clue: it was refused without ever asking for the passphrase.</li>
+            <li><strong>A login that hung in silence.</strong> GitHub accepted the key, then nothing. The desktop key agent was waiting on a passphrase prompt that never appeared. <code>ssh -v</code> showed the stage; bypassing the agent for that one host fixed it.</li>
+            <li><strong>Repository not found.</strong> I pushed before creating the repository on GitHub. The remote address was right; there was nothing at it yet.</li>
+          </ul>
+        </details>
+      </article>
 
       <!-- PROJECT CARDS: for each card, replace the title, the status word,
            the description and the last line. When a repository exists, swap
            the last <p> for:
            <p class="links"><a href="https://github.com/jk-terminal/REPO_NAME">Repository and notes</a></p> -->
       <div class="cards">
-
-        <article class="card">
-          <p class="state"><span class="led" aria-hidden="true"></span>planned</p>
-          <h3>Project one (placeholder)</h3>
-          <p>One or two sentences: what it is and why I built it.</p>
-          <p class="links">No repository yet</p>
-        </article>
 
         <article class="card">
           <p class="state"><span class="led" aria-hidden="true"></span>planned</p>
@@ -328,8 +488,13 @@
 
 <footer class="site-footer">
   <div class="wrap">
-    <p>One HTML file with inline CSS. No scripts, no trackers, no external requests.</p>
-    <p>Source: <a href="https://github.com/jk-terminal/jk-terminal.github.io" rel="noopener noreferrer">jk-terminal/jk-terminal.github.io</a></p>
+    <p>Plain HTML and CSS. No scripts, no trackers, no external requests, checked on every push.</p>
+    <p>
+      <a href="https://github.com/jk-terminal/jk-terminal.github.io" rel="noopener noreferrer">Source</a>
+      and
+      <a href="https://github.com/jk-terminal/jk-terminal.github.io/actions" rel="noopener noreferrer">check results</a>
+      on GitHub.
+    </p>
   </div>
 </footer>
 
