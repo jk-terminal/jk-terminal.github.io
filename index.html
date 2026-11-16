@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="referrer" content="no-referrer">
+<meta name="description" content="jk-terminal: notes and lab projects from learning Linux administration, bash scripting, networking and security.">
+<title>jk-terminal</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%2318202b'/%3E%3Cpath d='M8 10l7 6-7 6' fill='none' stroke='%23f0b354' stroke-width='3'/%3E%3Cpath d='M17 22h7' stroke='%23dde4ec' stroke-width='3'/%3E%3C/svg%3E">
+<style>
+  /* Colours come from a switch front panel: slate chassis, amber and green port LEDs. */
+  :root {
+    --bg: #18202b;
+    --panel: #1f2a38;
+    --line: #324052;
+    --text: #dde4ec;
+    --muted: #9aa8b9;
+    --amber: #f0b354;
+    --green: #7ed6a0;
+    --mono: ui-monospace, "Adwaita Mono", "Source Code Pro", "Cascadia Mono",
+            "DejaVu Sans Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", "Adwaita Sans", Cantarell,
+            "Noto Sans", Roboto, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+
+  .wrap {
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+  }
+
+  a { color: var(--amber); text-underline-offset: 0.2em; }
+  a:hover { color: var(--text); }
+  a:focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  .skip {
+    position: absolute;
+    left: -999rem;
+    top: 0;
+    background: var(--amber);
+    color: var(--bg);
+    padding: 0.5rem 0.75rem;
+  }
+  .skip:focus { left: 0.5rem; top: 0.5rem; }
+
+  /* Header */
+  .site-header { border-bottom: 1px solid var(--line); }
+  .site-header .wrap {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.25rem 1.5rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  .brand {
+    font-family: var(--mono);
+    font-weight: 700;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .site-nav { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; }
+  .site-nav a {
+    color: var(--muted);
+    text-decoration: none;
+    padding: 0.35rem 0;
+  }
+  .site-nav a:hover { color: var(--text); text-decoration: underline; }
+
+  /* Sections */
+  section { padding: 2.5rem 0; border-bottom: 1px solid var(--line); }
+  section:target, [id] { scroll-margin-top: 1rem; }
+
+  h1, h2, h3 { line-height: 1.25; margin: 0; }
+  h1 {
+    font-family: var(--mono);
+    font-size: clamp(1.5rem, 1.05rem + 2.4vw, 2.5rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    max-width: 24ch;
+    text-wrap: balance;
+  }
+  h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; }
+  h3 { font-size: 1.0625rem; font-weight: 700; }
+
+  p { margin: 0 0 1rem; max-width: 62ch; }
+  .lede { margin-top: 1.25rem; color: var(--muted); }
+  .lede:last-of-type { margin-bottom: 0; }
+  .note { color: var(--muted); }
+
+  .intro { padding-top: 3.5rem; padding-bottom: 3rem; }
+  .intro-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Focus areas */
+  .areas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    gap: 1.25rem 2rem;
+    margin: 0;
+  }
+  .areas dt { font-weight: 700; }
+  .areas dd { margin: 0.15rem 0 0; color: var(--muted); max-width: 42ch; }
+
+  /* Currently learning: one row per topic, laid out like link-state output */
+  .state-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 0.9375rem;
+  }
+  .state-list li {
+    display: grid;
+    grid-template-columns: minmax(9rem, 13rem) 8.5rem 1fr;
+    gap: 0.25rem 1rem;
+    align-items: baseline;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .state-list .detail { color: var(--muted); }
+  .state { white-space: nowrap; }
+
+  .led {
+    display: inline-block;
+    width: 0.6rem;
+    height: 0.6rem;
+    margin-right: 0.45rem;
+    border-radius: 50%;
+    border: 2px solid var(--muted);
+  }
+  .led-on {
+    background: var(--green);
+    border-color: var(--green);
+    box-shadow: 0 0 0.4rem rgba(126, 214, 160, 0.55);
+  }
+  .led-next { border-color: var(--amber); }
+
+  /* Projects */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1.1rem 1.1rem 1.2rem;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--amber);
+    border-radius: 3px;
+  }
+  .card p { margin: 0; }
+  .card .state {
+    font-family: var(--mono);
+    font-size: 0.875rem;
+    color: var(--muted);
+  }
+  .card .links { margin-top: auto; padding-top: 0.4rem; color: var(--muted); }
+
+  /* Footer */
+  .site-footer { padding: 2rem 0 3rem; color: var(--muted); font-size: 0.9375rem; }
+  .site-footer p { margin-bottom: 0.4rem; }
+
+  @media (max-width: 34rem) {
+    section { padding: 2rem 0; }
+    .intro { padding-top: 2.5rem; padding-bottom: 2.25rem; }
+    .state-list li { grid-template-columns: 1fr auto; }
+    .state-list .detail { grid-column: 1 / -1; }
+  }
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">jk-terminal</a>
+    <nav class="site-nav" aria-label="Sections">
+      <a href="#learning">Learning</a>
+      <a href="#projects">Projects</a>
+      <a href="https://github.com/jk-terminal" rel="noopener noreferrer">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="intro">
+    <div class="wrap">
+      <!-- TAGLINE: edit the heading and the paragraph below. -->
+      <h1>Linux, bash, networks and security, learned in a home lab and written down.</h1>
+      <p class="lede">This is a working notebook, not a showcase of finished things. Each project gets a short write-up: what I set up, what broke, and what I changed.</p>
+      <ul class="intro-links">
+        <li><a href="#projects">See the projects</a></li>
+        <li><a href="https://github.com/jk-terminal" rel="noopener noreferrer">Browse the repositories on GitHub</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="focus">
+    <div class="wrap">
+      <h2>Focus areas</h2>
+      <dl class="areas">
+        <div>
+          <dt>Linux administration</dt>
+          <dd>Running and maintaining my own Fedora system: packages, services, users, logs and updates.</dd>
+        </div>
+        <div>
+          <dt>Bash scripting</dt>
+          <dd>Small scripts that replace tasks I used to do by hand.</dd>
+        </div>
+        <div>
+          <dt>Networking</dt>
+          <dd>Subnetting, VLANs and ACLs, extending into host and network firewalls.</dd>
+        </div>
+        <div>
+          <dt>Security</dt>
+          <dd>Hardening my own devices and network first, with certification study alongside.</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <section id="learning">
+    <div class="wrap">
+      <h2>Currently learning</h2>
+      <!-- LEARNING LIST: one <li> per topic.
+           In progress: class="led led-on"   and the words "in progress"
+           Up next:     class="led led-next" and the word  "next" -->
+      <ul class="state-list">
+        <li>
+          <span class="topic">bash scripting</span>
+          <span class="state"><span class="led led-on" aria-hidden="true"></span>in progress</span>
+          <span class="detail">variables, quoting, functions, exit codes</span>
+        </li>
+        <li>
+          <span class="topic">git and GitHub</span>
+          <span class="state"><span class="led led-on" aria-hidden="true"></span>in progress</span>
+          <span class="detail">daily workflow, branches, publishing this site</span>
+        </li>
+        <li>
+          <span class="topic">firewall rules</span>
+          <span class="state"><span class="led led-next" aria-hidden="true"></span>next</span>
+          <span class="detail">firewalld zones and rules, building on ACLs</span>
+        </li>
+        <li>
+          <span class="topic">system hardening</span>
+          <span class="state"><span class="led led-next" aria-hidden="true"></span>next</span>
+          <span class="detail">SSH configuration, SELinux basics, update routine</span>
+        </li>
+        <li>
+          <span class="topic">home lab</span>
+          <span class="state"><span class="led led-next" aria-hidden="true"></span>next</span>
+          <span class="detail">a segmented lab network to break things in safely</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="wrap">
+      <h2>Projects</h2>
+      <p class="note">Nothing published yet. The first write-ups will appear here.</p>
+
+      <!-- PROJECT CARDS: for each card, replace the title, the status word,
+           the description and the last line. When a repository exists, swap
+           the last <p> for:
+           <p class="links"><a href="https://github.com/jk-terminal/REPO_NAME">Repository and notes</a></p> -->
+      <div class="cards">
+
+        <article class="card">
+          <p class="state"><span class="led" aria-hidden="true"></span>planned</p>
+          <h3>Project one (placeholder)</h3>
+          <p>One or two sentences: what it is and why I built it.</p>
+          <p class="links">No repository yet</p>
+        </article>
+
+        <article class="card">
+          <p class="state"><span class="led" aria-hidden="true"></span>planned</p>
+          <h3>Project two (placeholder)</h3>
+          <p>One or two sentences: what it is and why I built it.</p>
+          <p class="links">No repository yet</p>
+        </article>
+
+        <article class="card">
+          <p class="state"><span class="led" aria-hidden="true"></span>planned</p>
+          <h3>Project three (placeholder)</h3>
+          <p>One or two sentences: what it is and why I built it.</p>
+          <p class="links">No repository yet</p>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p>One HTML file with inline CSS. No scripts, no trackers, no external requests.</p>
+    <p>Source: <a href="https://github.com/jk-terminal/jk-terminal.github.io" rel="noopener noreferrer">jk-terminal/jk-terminal.github.io</a></p>
+  </div>
+</footer>
+
+</body>
+</html>
